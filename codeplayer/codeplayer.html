@@ -1,0 +1,174 @@
+<! doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"> <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> <!-- Font Awesome -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  <!-- jQuery -->
+        
+        <style type="text/css">
+            body {
+                background-image: url("texture1.jpg");
+            }
+            ol {
+                float: right;
+            }
+            .ta-panel {
+                resize: none;
+                height: 50%;
+                width: 100%;
+                background-color: #263239;                              
+                color: white;
+                overflow: auto;
+            }
+            .ta-div {
+                padding-top: 1%;
+            }
+            button {
+                width: 100px;
+            }
+            button:hover {
+                font-weight: bold;
+            }
+            .cen {
+                text-align: center;
+                color: #D35A76;
+            }
+            .iframe-div {
+                padding-top: 2%;
+                padding-bottom: 2%;
+            }
+            iframe {
+                width: 100%;
+                height: 28%;
+                background-color: white;
+                overflow: auto;
+                resize: vertical;
+            }
+            .hide-show-icon {
+                color: white;
+                position: absolute;
+                z-index: 2;
+                right: 5%;
+                font-size: 40px;
+                margin-top: 0.5%;
+                cursor: pointer;
+            }
+            .hidden {
+                display: none;
+            }
+            .show {
+                display: block;
+            }
+            
+            @media screen and (max-width: 770px) {
+                .hide-show-icon {
+                    display: none;
+                }
+            }
+            @media screen and (min-width: 770px) {
+                .hide-show-icon {
+                    display: block;
+                }
+            }
+        </style>                                        <!-- I just need to add a button to maximize the output window, themes and layouts-->
+        
+    </head>
+    
+    <body>
+        
+        <div class="hide-show-icon">
+            <i class="fa fa-angle-double-up" id="hide" aria-hidden="true"></i>
+            <i class="fa fa-angle-double-down hidden" id="show" aria-hidden="true"></i>
+        </div>
+        
+        
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">
+                <img src="logo.PNG" width="30" height="30" class="d-inline-block align-top" alt=""> CodePlayer
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="nav-items">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <button type="button" id="html" class="btn btn-dark active">HTML</button>    
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" id="css" class="btn btn-dark active">CSS</button>    
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" id="javascript" class="btn btn-dark active">JavaScript</button>    
+                        </div>
+                    </div>
+                </div>                
+            </div>    
+        </nav>
+        
+        <div class="container-fluid ta-div">
+            <div class="row" id="main">
+                <div class="col-md-4" id="htmldiv">
+                    <h5 class="cen">HTML</h5>
+                    <textarea id="htmlPanel" class="ta-panel">&lt;span id="demo"&gt; hello world! &lt;/span&gt;</textarea>
+                </div>
+                <div class="col-md-4" id="cssdiv">
+                    <h5 class="cen">CSS</h5>
+                    <textarea id="cssPanel" class="ta-panel">#demo { color : orange; }</textarea>
+                </div>
+                <div class="col-md-4" id="javascriptdiv">
+                    <h5 class="cen">JavaScript</h5>
+                    <textarea id="javascriptPanel" class="ta-panel">//Enter javaScript code here</textarea>
+                </div>
+            </div>
+            <div class="iframe-div">
+                <iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals" id="output"></iframe>      
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            $(".btn").click(function() {
+                $(this).toggleClass("active");
+                var id = '#' + $(this).attr('id') + 'div';  /*name of div to toggle*/
+                $(id).toggle();
+                var noc = $(".active").length;  //no of class with name acitve
+                noc = 12 / noc;
+                var name = 'col-md-' + noc;
+                $("#main div:visible").attr("class",name); 
+            });
+            
+                var start = '<html><head><style type="text/css">' + $("#cssPanel").val() + '</style></head><body> ';      /* To display initial code */
+                var end = ' </body></html>';
+                $("#output").contents().find("html").html(start + $("#htmlPanel").val() + end); 
+            
+            $(".ta-panel").on('change keyup paste', function() {
+                var start = '<html><head><style type="text/css">' + $("#cssPanel").val() + '</style></head><body> ';
+                var end = ' </body></html>';
+                $("#output").contents().find("html").html(start + $("#htmlPanel").val() + end); 
+                document.getElementById("output").contentWindow.eval($("#javascriptPanel").val());
+            });
+            
+            $("#hide").click(function() {
+                $(this).hide();
+                $("#show").show();
+                $("nav").hide();
+                $("iframe").css("height","37%");
+            });
+            $("#show").click(function() {
+                $(this).hide();
+                $("#hide").show();
+                $("nav").show();
+                $("iframe").css("height","28%");
+            });
+            
+        </script>
+        
+        
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>        
+    </body>
+</html>
